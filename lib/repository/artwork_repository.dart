@@ -14,7 +14,7 @@ class ArtworkRepository {
 
   ArtworkRepository({http.Client? client}) : _client = client ?? http.Client();
 
-  Future<PaginatedMinifiedArtwork> fetchArtworks({
+  Future<Either<String, PaginatedMinifiedArtwork>> fetchArtworks({
     required int page,
     required String query,
     int limit = 10,
@@ -33,9 +33,9 @@ class ArtworkRepository {
       ),
     );
     if (result.statusCode == 200) {
-      return PaginatedMinifiedArtwork.fromJson(jsonDecode(result.body));
+      return right(PaginatedMinifiedArtwork.fromJson(jsonDecode(result.body)));
     } else {
-      throw Exception('Failed to load artworks');
+      throw left('Failed to load artworks');
     }
   }
 
